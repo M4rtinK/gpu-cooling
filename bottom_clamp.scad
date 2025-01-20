@@ -16,12 +16,12 @@ difference(){
         cube([50, holder_width, 5]);
     }
     // fan cutout - 25 mm front
-    translate([0, 80, 9]) {
-        cube([50, 25.2, 1]);
+    translate([0, 85, 5]) {
+        cube([50, 25.2, 10]);
     }
     // fan cutout - 15 mm back
-    translate([0, 15, 9]) {
-        cube([50, 15.2, 1]);
+    translate([0, 15, 5]) {
+        cube([50, 15.2, 10]);
     }    
     // vertical hole 1
     translate([25, 10, 0]) {
