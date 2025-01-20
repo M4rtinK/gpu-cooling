@@ -2,7 +2,7 @@
 //$fs = 0.5;
 
 thickness=23;
-inner_diameter=93;
+inner_diameter=91.5;
 hole_diameter=73;
 smooth=60;
 difference(){
@@ -41,7 +41,7 @@ difference(){
         }
         
         // ramp
-        rotate([0,20,25]){
+        rotate([0,17,25]){
             translate([-45,-50,-42]) {
                 cube([80,100,40]);
             }
