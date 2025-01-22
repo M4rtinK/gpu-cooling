@@ -5,7 +5,10 @@ module prism(l, w, h){
               );
 }
       
-  
+rail_guide_width = 4.5;
+rail_guide_height = 4.5;
+central_notch_width = 10.5;
+
 difference(){
     union(){
         // movable wedge
@@ -14,19 +17,19 @@ difference(){
             cube([25, 5, 25]);
         }
         // wing notches to slide in rails
-        translate([-5, 0, 0]){
-            cube([5, 30, 5]);
+        translate([-rail_guide_width, 0, 0]){
+            cube([rail_guide_width, 30, rail_guide_height]);
         }
         translate([25, 0, 0]){
-            cube([5, 30, 5]);
+            cube([rail_guide_width, 30, rail_guide_height]);
         }
     }
     // cutout for oposite side
-    translate([(25-10)/2, 0, 5]){
-        cube([10, 25, 25]);
+    translate([(25-central_notch_width)/2, 0, 5]){
+        cube([central_notch_width, 25, 25]);
     }
-    translate([(25-10)/2, -20, -0.1]){
-        cube([10, 25, 25.1]);
+    translate([(25-central_notch_width)/2, -20, -0.1]){
+        cube([central_notch_width, 25, 25.1]);
     }
     // m4 screw hole
     translate([25/2, 50, 25/2]) {
