@@ -1,14 +1,19 @@
 fn = 100;
 
-heatpipe_depth = 9.5;
+revision_test=3;
+
+heatpipe_depth = 9;
 heatpipe_offset = 6.5;
 heatpipe_thickness = 7+1;
 heatpipe_width = 14.5+1; // actuall 2 heatpipes next to each other
 
 radiator_height = 52;
 radiator_width = 76;
-radiator_thickness = 22;
-radiator_notch_width = 11 + 0.5;
+// defined separately as not to move the hetpipe holes
+radiator_width_margin = 0.5;
+
+radiator_thickness = 22.5;
+radiator_notch_width = 11 - 0.5;
 radiator_notch_depth = 1.5 - 0.25;
 
 
@@ -50,12 +55,13 @@ difference() {
 
 module radiator_block() {
     difference(){
-        cube([radiator_width, radiator_thickness, radiator_height], center=true);
+        // radiator block
+        cube([radiator_width+radiator_width_margin, radiator_thickness, radiator_height], center=true);
         // side notches
-        translate([radiator_width/2-radiator_notch_depth/2+0.01, 0, 0]) {
+        translate([(radiator_width++radiator_width_margin)/2-radiator_notch_depth/2+0.01, 0, 0]) {
             cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
         }
-        translate([-radiator_width/2+radiator_notch_depth/2-0.01, 0, 0]) {
+        translate([-(radiator_width+radiator_width_margin)/2+radiator_notch_depth/2-0.01, 0, 0]) {
             cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
         } 
     }
@@ -94,9 +100,12 @@ module h2_cooler() {
 difference(){
     // main block
 
-    cube([85, 22, 25], center=true);
+    cube([85, 45, 25], center=true);
 
-    translate([0, 0, 26]) {
+    translate([0, -radiator_thickness/2, 26]) {
+        h2_cooler();
+    }
+    translate([0, +radiator_thickness/2, 26]) {
         h2_cooler();
     }
 }
