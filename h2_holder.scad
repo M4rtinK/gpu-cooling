@@ -1,3 +1,18 @@
+fn = 100;
+
+heatpipe_depth = 9.5;
+heatpipe_offset = 6.5;
+heatpipe_thickness = 7+1;
+heatpipe_width = 14.5+1; // actuall 2 heatpipes next to each other
+
+radiator_height = 52;
+radiator_width = 76;
+radiator_thickness = 22;
+radiator_notch_width = 11 + 0.5;
+radiator_notch_depth = 1.5 - 0.25;
+
+
+/*
 difference() {
     translate([0, 0, 20]) {
         cube([85, 55, 80], center=true);
@@ -25,11 +40,63 @@ difference() {
     translate([-28, -13, 3]) {
         cube([8, 15, 40], center=true);
     }    
-    
-    
+        
     // flow channel
     translate([0, -13, 58]) {
         cube([70, 100, 140], center=true);
     }
 }
+*/
 
+module radiator_block() {
+    difference(){
+        cube([radiator_width, radiator_thickness, radiator_height], center=true);
+        // side notches
+        translate([radiator_width/2-radiator_notch_depth/2+0.01, 0, 0]) {
+            cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
+        }
+        translate([-radiator_width/2+radiator_notch_depth/2-0.01, 0, 0]) {
+            cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
+        } 
+    }
+}
+
+module heatpipe_end() {
+    difference(){
+        cube([heatpipe_thickness, heatpipe_width-heatpipe_thickness, heatpipe_depth], center=true);
+        // round the hole edges to make it look nicer
+        
+    }
+    translate([0, heatpipe_width-heatpipe_thickness*1.5, 0]){
+        cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);
+    }
+    translate([0, -heatpipe_width+heatpipe_thickness*1.5, 0]){
+        cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);
+    }
+}
+
+module h2_cooler() {
+    // move to sit on Z=0
+    translate([0, 0, 0]){
+        radiator_block();
+        // add heatpipes
+        translate([radiator_width/2-heatpipe_thickness/2-heatpipe_offset, 0, -radiator_height/2-heatpipe_depth/2]){        
+            heatpipe_end();
+        }
+        translate([-radiator_width/2+heatpipe_thickness/2+heatpipe_offset, 0, -radiator_height/2-heatpipe_depth/2]){        
+            heatpipe_end();
+        }
+    }
+}
+
+
+
+difference(){
+    // main block
+
+    cube([85, 22, 25], center=true);
+
+    translate([0, 0, 26]) {
+        h2_cooler();
+    }
+}
