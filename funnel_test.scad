@@ -1,6 +1,6 @@
 include <BOSL2/std.scad>
 
-//union(){
+mk=1;
 
 fn=100;
 
@@ -12,13 +12,12 @@ interface_plate_thickness = 5;
 
 // fan end
 fan_diameter = 120;
-wall_thickness = fan_duct_diameter - fan_diameter;
 fan_duct_diameter = 123;
 fan_end_x = 15;
 fan_end_y = -30;
-fan_end_z = -40;
+fan_end_z = -30;
 fan_end_rotate_x = 0;
-fan_end_rotate_y = -30;
+fan_end_rotate_y = -20;
 fan_end_rotate_z = 0;
 
 // fan interface
@@ -93,7 +92,7 @@ module hollow_funnel() {
     }    
 }
 
-module fan_interface(offset=0){
+module fan_interface(offset=0, full=false){
     translate([0, offset, 0]) {
         difference(){
             union(){
@@ -102,16 +101,20 @@ module fan_interface(offset=0){
                     difference(){
                         cube([collar_outer_width, fan_plate_thickness, collar_outer_width], center=true);
                         // inner fan hole
-                        rotate([90, 0, 0]){
-                            cylinder(d=116, h=100, center=true, $fn=fn);
-                        }                             
+                        if(!full){
+                            rotate([90, 0, 0]){
+                                cylinder(d=116, h=100, center=true, $fn=fn);
+                            }
+                        }                    
                     }            
                 }
                 // fan collar
                 translate([0, (-collar_height/2)+(fan_plate_thickness/2), 0])
                 difference(){        
                     cube([collar_outer_width, collar_height, collar_outer_width], center=true);
-                    cube([collar_inner_fan_width, collar_height, collar_inner_fan_width], center=true);        
+                    if(!full){
+                        cube([collar_inner_fan_width, collar_height, collar_inner_fan_width], center=true);        
+                    }
                 }
             }
         }
@@ -119,9 +122,9 @@ module fan_interface(offset=0){
 }
 
 module stabilization_block() {
-    cube([15, 10, 72], center=true);
-    translate([-10, 0, -32]){
-        cube([20, 10, 10], center=true);
+    cube([15, 15, 72], center=true);
+    translate([-10, 0, -37]){
+        cube([30, 15, 10], center=true);
     }
 }
 
@@ -142,10 +145,15 @@ translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
 }  
 
 difference(){
-    translate([-38.5, 0, -33]) {
+    translate([-40, -20, -34]) {
         stabilization_block();
     }
-    funnel(); 
+    funnel();
+    translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
+    rotate([fan_end_rotate_x+90, fan_end_rotate_y, fan_end_rotate_z]){
+        fan_interface(-6, true);
+    }
+}  
 }
 
 
