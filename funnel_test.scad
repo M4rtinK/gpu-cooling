@@ -1,4 +1,5 @@
 include <BOSL2/std.scad>
+include <BOSL2/screws.scad>
 
 mk=1;
 
@@ -21,7 +22,7 @@ fan_end_rotate_y = -20;
 fan_end_rotate_z = 0;
 
 // fan interface
-collar_height = 25;
+collar_height = 8;
 collar_outer_width = 127;
 // this seems to work good enough for press fit,
 // at least with a  Arctic P12 MAX
@@ -122,10 +123,18 @@ module fan_interface(offset=0, full=false){
 }
 
 module stabilization_block() {
-    cube([15, 15, 72], center=true);
-    translate([-10, 0, -37]){
-        cube([30, 15, 10], center=true);
-    }
+    cube([15, 15, 60], center=true);
+    translate([-13, 0, -28]){
+        difference(){
+            cube([30, 15, 10], center=true); 
+            translate([-6, 0, 8]){
+                rotate([0, 0, 90]){
+                    screw_hole("M4", length=20)
+                        position(BOT) nut_trap_side(10,poke_len=8);
+                }
+            }        
+        }
+    }    
 }
 
 
@@ -145,15 +154,15 @@ translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
 }  
 
 difference(){
-    translate([-40, -20, -34]) {
+    translate([-40, -20, -28]) {
         stabilization_block();
     }
     funnel();
     translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
-    rotate([fan_end_rotate_x+90, fan_end_rotate_y, fan_end_rotate_z]){
-        fan_interface(-6, true);
-    }
-}  
+        rotate([fan_end_rotate_x+90, fan_end_rotate_y, fan_end_rotate_z]){
+            fan_interface(-6, true);
+        }
+    }  
 }
 
 
