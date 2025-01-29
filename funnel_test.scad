@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-mk=1;
+mk=2;
 
 fn=100;
 
@@ -9,6 +9,9 @@ fn=100;
 card_hole_outer_diameter = 72.8;
 card_hole_inner_diameter = 71;
 card_side_funnel_diameter = 73;
+card_plate_width = 95;
+card_plate_depth = 94;
+card_plate_y_offset = 3.6;
 interface_plate_thickness = 5;
 
 // fan end
@@ -33,8 +36,8 @@ module card_attachment_interface(){
     difference() {
         union() {
             difference() {
-                translate([0, 3.6, 0]) {
-                    cube([95, 94, interface_plate_thickness],true);            
+                translate([0, card_plate_y_offset, 0]) {
+                    cube([card_plate_width, card_plate_depth, interface_plate_thickness],true);            
                 }
                 // ziptie groves
                 // - for 5 m wide zip ties
@@ -123,10 +126,26 @@ module fan_interface(offset=0, full=false){
 }
 
 module stabilization_block() {
-    cube([15, 15, 60], center=true);
-    translate([-13, 0, -28]){
+    block_height = 25;
+    // main cube
+    translate([0, card_plate_y_offset, (-block_height/2)+2]){
         difference(){
-            cube([30, 15, 10], center=true); 
+            // main support block
+            cube([card_plate_width, card_plate_depth, block_height], center=true);
+            // cut the back side
+            translate([0, 82, -10]) {
+                cube([card_plate_width+2, card_plate_depth, block_height], center=true);
+            }
+        }                
+    }
+    translate([-50, 0, -52]){
+        difference(){
+            union(){
+                translate([10, 0, 28]) {
+                    cube([10, 65, 50], center=true);     
+                }                
+                cube([30, 15, 15], center=true); 
+            }
             translate([-6, 0, 8]){
                 rotate([0, 0, 90]){
                     screw_hole("M4", length=20)
@@ -154,9 +173,9 @@ translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
 }  
 
 difference(){
-    translate([-40, -20, -28]) {
+    //translate([-40, -20, -28]) {
         stabilization_block();
-    }
+    //}
     funnel();
     translate([fan_end_x, fan_end_y, fan_end_z-0.1]) {
         rotate([fan_end_rotate_x+90, fan_end_rotate_y, fan_end_rotate_z]){
