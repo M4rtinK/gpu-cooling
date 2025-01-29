@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-mk=2;
+mk=3;
 
 fn=100;
 
@@ -138,23 +138,35 @@ module stabilization_block() {
             }
         }                
     }
-    translate([-50, 0, -52]){
+    translate([-50.5, 0, -54.51]){
         difference(){
             union(){
-                translate([10, 0, 28]) {
+                translate([8, 0, 25]) {
                     cube([10, 65, 50], center=true);     
-                }                
-                cube([30, 15, 15], center=true); 
-            }
-            translate([-6, 0, 8]){
-                rotate([0, 0, 90]){
-                    screw_hole("M4", length=20)
-                        position(BOT) nut_trap_side(10,poke_len=8);
+                }            
+                translate([-3, 25, -0.5]) {                    
+                    support_block();                    
                 }
-            }        
+                translate([-3, -55, -0.5]) {                    
+                    support_block();                    
+                }
+            }            
         }
     }    
 }
+
+module support_block(){
+    difference(){
+        cube([25, 15, 15], center=true);
+        translate([-5, 0, -3]){
+            rotate([0, 0, 90]){
+                screw_hole("M4", length=30)
+                    position(CENTER) nut_trap_side(10,poke_len=8);
+            }
+        }
+    }
+}    
+
 
 
 
