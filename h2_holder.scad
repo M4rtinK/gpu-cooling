@@ -1,11 +1,13 @@
 fn = 100;
 
+mk=2;
+
 revision_test=3;
 
-heatpipe_depth = 9;
+heatpipe_depth = 8.5;
 heatpipe_offset = 6.5;
 heatpipe_thickness = 7+1;
-heatpipe_width = 14.5+1; // actuall 2 heatpipes next to each other
+heatpipe_width = 14.5+1; // actually 2 heatpipes next to each other
 
 radiator_height = 52;
 radiator_width = 76;
@@ -13,8 +15,8 @@ radiator_width = 76;
 radiator_width_margin = 0.5;
 
 radiator_thickness = 22.5;
-radiator_notch_width = 11 - 0.5;
-radiator_notch_depth = 1.5 - 0.25;
+radiator_notch_width = 11 - 0.2;
+radiator_notch_depth = 1.5 - 0.2;
 
 
 /*
@@ -105,7 +107,17 @@ difference(){
     translate([0, -radiator_thickness/2, 26]) {
         h2_cooler();
     }
+    // temporary cut the other set
+    translate([0, +radiator_thickness/2+3, 0]) {
+        cube([100, 30, 50], center=true);
+    }
+    /*
     translate([0, +radiator_thickness/2, 26]) {
         h2_cooler();
-    }
+    }*/
 }
+
+
+
+
+
