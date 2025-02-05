@@ -1,7 +1,10 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-mk=4;
+mk=5;
+
+// set to false if you want to use a free rotating screw
+screw_should_engage = true;
 
 collar_height = 8;
 collar_outer_width = 125;
@@ -15,9 +18,13 @@ fan_screw_counterbore = 0.5;
 inner_fan_hole = 116;
 fn = 100;
 
-module case_fan_screw(){
-    rotate([90, 0, 0]) {
-        screw_hole(fan_screw, length=10, head="flat", counterbore=2, head_oversize=-2, $fn=fn);
+module fan_screw_hole(){
+    rotate([90, 0, 0]) {       
+        if (screw_should_engage == true) {
+            cylinder(d=4.3, h=10, $fn=fn);
+        } else {
+            screw_hole(fan_screw, length=10, head="flat", counterbore=2, head_oversize=-2, $fn=fn);
+        }
     }
 }
 
@@ -33,16 +40,16 @@ difference(){
                 }
                 // screw holes
                 translate([-fan_screw_distance/2, 2+fan_screw_counterbore, fan_screw_distance/2]) {
-                    case_fan_screw();                    
+                    fan_screw_hole();                    
                 }
                 translate([fan_screw_distance/2, 2+fan_screw_counterbore, fan_screw_distance/2]) {
-                    case_fan_screw();
+                    fan_screw_hole();
                 }        
                 translate([fan_screw_distance/2, 2+fan_screw_counterbore, -fan_screw_distance/2]) {
-                    case_fan_screw();
+                    fan_screw_hole();
                 }                        
                 translate([-fan_screw_distance/2, 2+fan_screw_counterbore, -fan_screw_distance/2]) {
-                    case_fan_screw();
+                    fan_screw_hole();
                 }                                
             }                    
         // fan collar
