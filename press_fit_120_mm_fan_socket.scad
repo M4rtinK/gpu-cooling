@@ -1,14 +1,14 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-mk=2;
+mk=4;
 
-collar_height = 9;
+collar_height = 8;
 collar_outer_width = 125;
 // this seems to work good enough for press fit,
 // at least with a  Arctic P12 MAX
 collar_inner_fan_width = 120.2;
-plate_thickness = 6;
+plate_thickness = 2;
 fan_screw_distance = 105;
 fan_screw = "M5";
 fan_screw_counterbore = 0.5;
@@ -17,7 +17,7 @@ fn = 100;
 
 module case_fan_screw(){
     rotate([90, 0, 0]) {
-        screw_hole(fan_screw, length=10, head="flat", counterbore=2, head_oversize=1, $fn=fn);
+        screw_hole(fan_screw, length=10, head="flat", counterbore=2, head_oversize=-2, $fn=fn);
     }
 }
 
@@ -46,9 +46,10 @@ difference(){
                 }                                
             }                    
         // fan collar
-        translate([0, -(plate_thickness/2+collar_height/2), 0]){
+        // - making sure there i overlap or else apparently resulting STL might be sliuced as split :P
+        translate([0, -(plate_thickness/2+collar_height/2)+0.01, 0]){
             difference(){        
-                cuboid([collar_outer_width, collar_height, collar_outer_width], rounding=3, edges = "Y", $fn=fn, center=true);
+                cuboid([collar_outer_width, collar_height+0.01, collar_outer_width], rounding=3, edges = "Y", $fn=fn, center=true);
                 cube([collar_inner_fan_width, collar_height+5, collar_inner_fan_width], center=true);        
             }
         }
