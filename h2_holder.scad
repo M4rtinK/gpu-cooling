@@ -3,7 +3,7 @@ include <BOSL2/screws.scad>
 
 fn = 100;
 
-mk=4;
+mk=7;
 
 revision_test=3;
 
@@ -27,9 +27,9 @@ radiator_notch_depth = 1.5 - 0.2;
 
 // fan block
 fan_block_groove = 4;
-fan_width = 80;
-thick_fan = 25;
-slim_fan = 15;
+fan_width = 80.5;
+thick_fan = 25.5;
+slim_fan = 15.5;
 
 // main block
 main_block_width = 95;
@@ -79,16 +79,11 @@ module h2_cooler() {
 
 module cooling_module() {
     // a cooling module holding 2 H2 heatpipe coolers
-    difference(){
-        cube([main_block_width, 45, main_block_height], center=true);
-
-        translate([0, -radiator_thickness/2, 8]) {
-            h2_cooler();
-        }                
-        translate([0, +radiator_thickness/2, 8]) {
-            h2_cooler();
-        }
-    }
+    diff()
+    cuboid([main_block_width, 45, main_block_height], anchor=BOTTOM) {
+        up(8) fwd(radiator_thickness/2) tag("remove") h2_cooler();
+        up(8) back(radiator_thickness/2) tag("remove") h2_cooler();
+    }    
 }
 
 module fan_module(fan_thickness=thick_fan) {
@@ -108,6 +103,23 @@ module fan_module(fan_thickness=thick_fan) {
     }
 }
 
+module m4_nut_trap(rotate=0) {
+    zrot(rotate) screw_hole("M4", length=20, $fn=fn, anchor=BOTTOM)
+        up(5) position(BOT) nut_trap_side(10, "M4", poke_len=10);
+}
+
+module leveling_ramp() {
+    diff()
+    cuboid([main_block_width, 15, 10], anchor=BOTTOM) {
+        down(7) left((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
+        down(7) right((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
+    }
+}
+
+cooling_module();
+
+//leveling_ramp();
+
 
 // Left to righ is the opposite direction to the airflow. :)
 last_cooling_block_offset = radiator_thickness;
@@ -115,16 +127,49 @@ central_fan_block_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)
 first_cooling_block_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)+radiator_thickness;
 first_fan_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)+radiator_thickness*2+(slim_fan+fan_block_groove*2)/2;
 
+/*
 // last cooling block
 translate([0, last_cooling_block_offset, 0]){
     cooling_module();
 }
+*/
 
 // 25 mm main fan (arctic P8 Max)
+/*
 translate([0, central_fan_block_offset, 0]){
-fan_module(thick_fan);
-}
+    fan_module(thick_fan);
+}*/
 
+
+
+
+
+/*
+difference(){
+    union(){
+        translate([0, 5+(25+8)/2, -37]){
+            cube([main_block_width, 10, 10], center=true);
+        }        
+        fan_module(thick_fan);
+        translate([0, -5-(25+8)/2, -37]){
+            cube([main_block_width, 10, 10], center=true);
+        }
+    }   
+    rotate([0, 0, 270]){
+        translate([21,0,-38]){
+            screw_hole("M4", length=20, $fn=fn)
+                up(10) position(BOT) nut_trap_side(10, "M4", poke_len=10);
+        }
+    }    
+    rotate([0, 0, 90]){
+        translate([21,0,-38]){
+            screw_hole("M4", length=20, $fn=fn)
+                up(10) position(BOT) nut_trap_side(10, "M4", poke_len=10);
+        }
+    }    
+}*/
+    
+/*
 // first cooling block
 translate([0, first_cooling_block_offset, 0]){
     cooling_module();
@@ -133,4 +178,4 @@ translate([0, first_cooling_block_offset, 0]){
 // first 
 translate([0, first_fan_offset, 0]){
     fan_module(slim_fan);
-}
+}*/
