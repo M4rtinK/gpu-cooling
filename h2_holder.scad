@@ -3,7 +3,7 @@ include <BOSL2/screws.scad>
 
 fn = 100;
 
-mk=7;
+mk=8;
 
 revision_test=3;
 
@@ -37,8 +37,8 @@ main_block_height = 84;
 
 module radiator_block() {
     difference(){
-        // radiator block
-        cube([total_radiator_width, radiator_thickness, radiator_height], center=true);
+        // radiator block - add 0.01 mm to avoid flickering
+        cube([total_radiator_width, radiator_thickness+0.01, radiator_height], center=true);
         // side notches
         translate([(radiator_width+radiator_width_margin)/2-radiator_notch_depth/2+0.01, 0, 0]) {
             cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
@@ -50,29 +50,21 @@ module radiator_block() {
 }
 
 module heatpipe_end() {
-    difference(){
-        cube([heatpipe_thickness, heatpipe_width-heatpipe_thickness, heatpipe_depth], center=true);
-        // round the hole edges to make it look nicer
-        
-    }
-    translate([0, heatpipe_width-heatpipe_thickness*1.5, 0]){
-        cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);
-    }
-    translate([0, -heatpipe_width+heatpipe_thickness*1.5, 0]){
-        cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);
-    }
+    cube([heatpipe_thickness, heatpipe_width-heatpipe_thickness, heatpipe_depth+0.01], center=true);    
+    // round the hole edges to make it look nicer    
+    back(heatpipe_width-heatpipe_thickness*1.5) cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);    
+    fwd(heatpipe_width-heatpipe_thickness*1.5) cylinder(d=heatpipe_thickness, h=heatpipe_depth, $fn=fn, center=true);    
 }
 
-module h2_cooler() {
-    // move to sit on Z=0
-    translate([0, 0, 0]){
+module h2_cooler() { 
+    union(){   
         radiator_block();
         // add heatpipes
         translate([radiator_width/2-heatpipe_thickness/2-heatpipe_offset, 0, -radiator_height/2-heatpipe_depth/2]){        
-            heatpipe_end();
+            up(0.01) heatpipe_end();
         }
         translate([-radiator_width/2+heatpipe_thickness/2+heatpipe_offset, 0, -radiator_height/2-heatpipe_depth/2]){        
-            heatpipe_end();
+            up(0.01) heatpipe_end();
         }
     }
 }
@@ -139,10 +131,6 @@ translate([0, last_cooling_block_offset, 0]){
 translate([0, central_fan_block_offset, 0]){
     fan_module(thick_fan);
 }*/
-
-
-
-
 
 /*
 difference(){
