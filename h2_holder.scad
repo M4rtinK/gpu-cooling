@@ -3,7 +3,7 @@ include <BOSL2/screws.scad>
 
 fn = 100;
 
-mk=8;
+mk=9;
 
 revision_test=3;
 
@@ -39,13 +39,11 @@ module radiator_block() {
     difference(){
         // radiator block - add 0.01 mm to avoid flickering
         cube([total_radiator_width, radiator_thickness+0.01, radiator_height], center=true);
-        // side notches
-        translate([(radiator_width+radiator_width_margin)/2-radiator_notch_depth/2+0.01, 0, 0]) {
+        // side notches        
+        right((radiator_width+radiator_width_margin)/2-radiator_notch_depth/2+0.01) 
+            cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);        
+        right(-(radiator_width+radiator_width_margin)/2+radiator_notch_depth/2-0.01)
             cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
-        }
-        translate([-(radiator_width+radiator_width_margin)/2+radiator_notch_depth/2-0.01, 0, 0]) {
-            cube([radiator_notch_depth, radiator_notch_width, radiator_height+0.01], center=true);
-        } 
     }
 }
 
@@ -72,26 +70,21 @@ module h2_cooler() {
 module cooling_module() {
     // a cooling module holding 2 H2 heatpipe coolers
     diff()
-    cuboid([main_block_width, 45, main_block_height], anchor=BOTTOM) {
+    cuboid([main_block_width, 45, main_block_height], anchor=BOTTOM + BACK) {
         up(8) fwd(radiator_thickness/2) tag("remove") h2_cooler();
         up(8) back(radiator_thickness/2) tag("remove") h2_cooler();
     }    
 }
 
-module fan_module(fan_thickness=thick_fan) {
+module fan_module(fan_thickness=thick_fan, groove=fan_block_groove) {
     // a module holding one 80 mm fan, with support for variable fan thickness
-    difference(){
-        cube([main_block_width, fan_thickness+fan_block_groove*2, main_block_height], center=true);
-        translate([0, 0, 10]){
+    diff(){
+        cuboid([main_block_width, fan_thickness+groove*2, main_block_height], anchor=BOTTOM + BACK){        
             // fan analog
-            cuboid([fan_width, fan_thickness, 100], rounding=3, edges = "Y", $fn=fn, center=true);         
-        }
-        translate([0, 0, 2]){            
+            up(10) tag("remove") cuboid([fan_width, fan_thickness+0.01, 100], rounding=3, edges = "Y", $fn=fn, center=true); 
             // air hole
-            cube([fan_width-4, 80, fan_width-15], center=true);
+            up(2) tag("remove") cube([fan_width-4, 80, fan_width-15], center=true);
         }        
-        
-        
     }
 }
 
@@ -102,68 +95,16 @@ module m4_nut_trap(rotate=0) {
 
 module leveling_ramp() {
     diff()
-    cuboid([main_block_width, 15, 10], anchor=BOTTOM) {
+    cuboid([main_block_width, 15, 10], anchor=BOTTOM + BACK) {
         down(7) left((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
         down(7) right((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
     }
 }
 
+//cooling_module();
+
+back(15) leveling_ramp();
 cooling_module();
-
-//leveling_ramp();
-
-
-// Left to righ is the opposite direction to the airflow. :)
-last_cooling_block_offset = radiator_thickness;
-central_fan_block_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)/2;
-first_cooling_block_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)+radiator_thickness;
-first_fan_offset = (radiator_thickness*2)+(thick_fan+fan_block_groove*2)+radiator_thickness*2+(slim_fan+fan_block_groove*2)/2;
-
-/*
-// last cooling block
-translate([0, last_cooling_block_offset, 0]){
-    cooling_module();
-}
-*/
-
-// 25 mm main fan (arctic P8 Max)
-/*
-translate([0, central_fan_block_offset, 0]){
-    fan_module(thick_fan);
-}*/
-
-/*
-difference(){
-    union(){
-        translate([0, 5+(25+8)/2, -37]){
-            cube([main_block_width, 10, 10], center=true);
-        }        
-        fan_module(thick_fan);
-        translate([0, -5-(25+8)/2, -37]){
-            cube([main_block_width, 10, 10], center=true);
-        }
-    }   
-    rotate([0, 0, 270]){
-        translate([21,0,-38]){
-            screw_hole("M4", length=20, $fn=fn)
-                up(10) position(BOT) nut_trap_side(10, "M4", poke_len=10);
-        }
-    }    
-    rotate([0, 0, 90]){
-        translate([21,0,-38]){
-            screw_hole("M4", length=20, $fn=fn)
-                up(10) position(BOT) nut_trap_side(10, "M4", poke_len=10);
-        }
-    }    
-}*/
-    
-/*
-// first cooling block
-translate([0, first_cooling_block_offset, 0]){
-    cooling_module();
-}
-
-// first 
-translate([0, first_fan_offset, 0]){
-    fan_module(slim_fan);
-}*/
+fwd(2*radiator_thickness) cooling_module();
+fwd(4*radiator_thickness) fan_module(thick_fan, 0);
+fwd(thick_fan+4*radiator_thickness+15) zrot(180) leveling_ramp();
