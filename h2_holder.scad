@@ -1,9 +1,9 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-fn = 100;
+fn = 300;
 
-mk=9;
+mk = 10;
 
 revision_test=3;
 
@@ -33,7 +33,7 @@ slim_fan = 15.5;
 
 // main block
 main_block_width = 95;
-main_block_height = 84;
+main_block_height = 82;
 
 module radiator_block() {
     difference(){
@@ -81,10 +81,14 @@ module fan_module(fan_thickness=thick_fan, groove=fan_block_groove) {
     diff(){
         cuboid([main_block_width, fan_thickness+groove*2, main_block_height], anchor=BOTTOM + BACK){        
             // fan analog
-            up(10) tag("remove") cuboid([fan_width, fan_thickness+0.01, 100], rounding=3, edges = "Y", $fn=fn, center=true); 
+            up(10) tag("remove") cuboid([fan_width, fan_thickness+0.01, 100], rounding=3, edges = "Y", $fn=fn, center=true);             
             // air hole
             up(2) tag("remove") cube([fan_width-4, 80, fan_width-15], center=true);
-        }        
+            // upper ziptie groove
+            up((main_block_height/2)-5) tag("remove") cube([120, 5.5, 15], anchor=BOTTOM);
+            // lower ziptie groove
+            up(6) xrot(90) tag("remove") tube(h=5.5, or=70, wall=5, $fn=fn, anchor=CENTER);
+        }     
     }
 }
 
@@ -93,16 +97,17 @@ module m4_nut_trap(rotate=0) {
         up(5) position(BOT) nut_trap_side(10, "M4", poke_len=10);
 }
 
-module leveling_ramp() {
+module leveling_ramp(width=main_block_width) {
     diff()
-    cuboid([main_block_width, 15, 10], anchor=BOTTOM + BACK) {
-        down(7) left((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
-        down(7) right((main_block_width/2)-12) tag("remove") m4_nut_trap(90);
+    cuboid([width, 15, 10], anchor=BOTTOM + BACK) {
+        down(7) left((width/2)-12) tag("remove") m4_nut_trap(90);
+        down(7) right((width/2)-12) tag("remove") m4_nut_trap(90);
     }
 }
 
 //cooling_module();
 
+//back(15) fan_module(slim_fan, 0);
 back(15) leveling_ramp();
 cooling_module();
 fwd(2*radiator_thickness) cooling_module();
