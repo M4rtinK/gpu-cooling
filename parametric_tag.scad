@@ -16,7 +16,7 @@ thickness = 1;
 bit_height = 15; 
 bit_width = 25;
 
-cuboid([width, height, thickness], rounding=10, edges="Z", $fn=fn)
+cuboid([width, height, thickness], rounding=5, edges="Z", $fn=fn)
     attach(BACK,RIGHT)
             color("lightblue")cuboid([bit_height, bit_width, thickness],
                   rounding=2, edges=[LEFT+FRONT, BACK+LEFT], $fn=fn
