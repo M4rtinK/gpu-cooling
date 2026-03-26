@@ -3,7 +3,7 @@ include <BOSL2/screws.scad>
 
 mk=11;
 
-fn=60;
+fn=30;
 
 // card end
 card_hole_outer_diameter = 72.8;

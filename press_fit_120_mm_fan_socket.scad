@@ -16,7 +16,7 @@ fan_screw_distance = 105;
 fan_screw = "M5";
 fan_screw_counterbore = 0.5;
 inner_fan_hole = 116;
-fn = 100;
+fn = 300;
 
 module fan_screw_hole(){
     rotate([90, 0, 0]) {       
