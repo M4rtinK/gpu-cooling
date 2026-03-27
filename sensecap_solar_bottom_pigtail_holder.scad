@@ -5,7 +5,7 @@ include <BOSL2/screws.scad>
 include <BOSL2/walls.scad>
 include <BOSL2/turtle3d.scad>
 
-mk = 4;
+mk = 5;
 
 $fn = 100;
 
@@ -24,7 +24,7 @@ pigtail_front_width = 6.1+0.2;
 pigtail_back_width = 4.1+0.1;
 
 screw_hole_y = 2;
-screw_hole_z = 10;
+screw_hole_z = 4;
 
 diff()
 cube([block_width, block_depth, block_height], anchor=BOTOM) {
@@ -55,10 +55,10 @@ cube([block_width, block_depth, block_height], anchor=BOTOM) {
         right(block_width/2-USB_notch_width/2-USB_notch_left_offset) 
             cube([USB_notch_width + 1, 30, USB_notch_height], anchor=FRONT);            
         // screw hole right
-        up(screw_hole_y) back(screw_hole_z) left(9.5) zrot(90) yrot(90) screw_hole("m3,20")
-          up(10) position(BOT) nut_trap_side(trap_width=20,poke_len=12);
+        up(screw_hole_y) back(screw_hole_z) left(9.5) zrot(90) yrot(270) screw_hole("m3,40")
+          up(10) position(BOT) nut_trap_side(trap_width=20,poke_len=20);
         // screw hole left
-        up(screw_hole_y) back(screw_hole_z) right(15) zrot(90) yrot(90) screw_hole("m3,20")
-          up(10) position(BOT) nut_trap_side(trap_width=10,poke_len=12);
+        up(screw_hole_y) back(screw_hole_z) right(15) zrot(90) yrot(270) screw_hole("m3,40")
+          up(10) position(BOT) nut_trap_side(trap_width=10,poke_len=20);
     };      
 };
