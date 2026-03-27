@@ -5,7 +5,7 @@ include <BOSL2/screws.scad>
 include <BOSL2/walls.scad>
 include <BOSL2/turtle3d.scad>
 
-mk = 3;
+mk = 4;
 
 $fn = 100;
 
@@ -23,7 +23,7 @@ USB_notch_left_offset = 7.4;
 pigtail_front_width = 6.1+0.2;
 pigtail_back_width = 4.1+0.1;
 
-screw_hole_y = 4;
+screw_hole_y = 2;
 screw_hole_z = 10;
 
 diff()
