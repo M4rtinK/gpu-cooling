@@ -5,7 +5,7 @@ include <BOSL2/screws.scad>
 include <BOSL2/walls.scad>
 include <BOSL2/turtle3d.scad>
 
-mk = 5;
+mk = 6;
 
 $fn = 100;
 
@@ -48,7 +48,7 @@ cube([block_width, block_depth, block_height], anchor=BOTOM) {
         // right notch
         fwd(10) left(21.5) cube([notch_width + 1, 30, 30], anchor=FRONT);                
         // top ridge
-        attach(UP) left(16)down(5) cube([44, 8, 5]);              
+        attach(UP) left(16)down(5) cube([44, 10, 5]);              
         // USB notch
         fwd(10) 
         down(block_height/2-USB_notch_height/2+0.01) 
