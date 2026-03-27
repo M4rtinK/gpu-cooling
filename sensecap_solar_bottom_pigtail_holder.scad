@@ -5,7 +5,7 @@ include <BOSL2/screws.scad>
 include <BOSL2/walls.scad>
 include <BOSL2/turtle3d.scad>
 
-mk = 1;
+mk = 3;
 
 $fn = 100;
 
@@ -20,7 +20,7 @@ USB_notch_width = 23;
 USB_notch_height = 10;
 USB_notch_left_offset = 7.4;
 
-pigtail_front_width = 6.1+0.1;
+pigtail_front_width = 6.1+0.2;
 pigtail_back_width = 4.1+0.1;
 
 screw_hole_y = 4;
@@ -39,7 +39,7 @@ cube([block_width, block_depth, block_height], anchor=BOTOM) {
             down(2.5) back(2) xrot(90) cylinder(h=20, d=pigtail_back_width, anchor=FRONT);
             // pigtail back gap
             down(4
-            ) fwd() cuboid([2,15,6], rounding=1, anchor=FRONT);
+            ) fwd() cuboid([pigtail_back_width,15,6], rounding=1, anchor=FRONT);
             
             
         }
